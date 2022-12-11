@@ -66,6 +66,30 @@ const getBreakingNews = async (req, res) => {
     }
 };
 
+const getNewsByCategory = async (req, res) => {
+    const { categoryId } = req.params;
+    try {
+        const news = await News.find({ categoryId: mongoose.Types.ObjectId(categoryId) }).populate('categoryId');
+        if (news) {
+            res.json({
+                status: 200,
+                news
+            });
+        } else {
+            res.json({
+                status: 404,
+                message: 'News not found',
+            });
+        }
+    } catch (err) {
+        res.json({
+            status: 500,
+            message: err.message,
+        });
+    }
+};
+
+
 const getNewsById = async (req, res) => {
     const { id } = req.params;
     try {
@@ -95,5 +119,6 @@ module.exports = {
     postCreateNews,
     getAllNews,
     getBreakingNews,
+    getNewsByCategory,
     getNewsById,
 };

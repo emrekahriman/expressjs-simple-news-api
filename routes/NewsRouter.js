@@ -5,6 +5,7 @@ const { postCreateNews, getAllNews, getBreakingNews, getNewsById } = require('..
 
 router.post('/create-news', postCreateNews);
 router.get('/news', getAllNews);
+router.get('/news/category/:categoryId', getNewsByCategory);
 router.get('/news/:id', getNewsById);
 router.get('/breaking-news', getBreakingNews);
 
