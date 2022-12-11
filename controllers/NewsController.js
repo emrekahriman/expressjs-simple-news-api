@@ -44,9 +44,31 @@ const getAllNews = async (req, res) => {
     }
 };
 
+const getHotNews = async (req, res) => {
+    try {
+        const news = await News.find({}).sort({ hits: -1 }).limit(10).populate('categoryId');
+        if (news) {
+            res.json({
+                status: 200,
+                news
+            });
+        } else {
+            res.json({
+                status: 404,
+                message: 'News not found',
+            });
+        }
+    } catch (err) {
+        res.json({
+            status: 500,
+            message: err.message,
+        });
+    }
+};
+
 const getBreakingNews = async (req, res) => {
     try {
-        const news = await News.find({}).sort({date: -1}).limit(10).populate('categoryId');
+        const news = await News.find({}).sort({ date: -1 }).limit(10).populate('categoryId');
         if (news) {
             res.json({
                 status: 200,
@@ -69,7 +91,7 @@ const getBreakingNews = async (req, res) => {
 const getNewsByCategory = async (req, res) => {
     const { categoryId } = req.params;
     try {
-        const news = await News.find({ categoryId: mongoose.Types.ObjectId(categoryId) }).sort({date: -1}).populate('categoryId');
+        const news = await News.find({ categoryId: mongoose.Types.ObjectId(categoryId) }).sort({ date: -1 }).populate('categoryId');
         if (news.length > 0) {
             res.json({
                 status: 200,
@@ -89,12 +111,14 @@ const getNewsByCategory = async (req, res) => {
     }
 };
 
-
 const getNewsById = async (req, res) => {
     const { id } = req.params;
     try {
         const news = await News.findById(id).populate('categoryId');
         if (news) {
+            // Set hits
+            news.hits += 1;
+            news.save();
             res.json({
                 status: 200,
                 news
@@ -105,7 +129,6 @@ const getNewsById = async (req, res) => {
                 message: 'News not found',
             });
         }
-
     } catch (err) {
         res.json({
             status: 500,
@@ -118,6 +141,7 @@ const getNewsById = async (req, res) => {
 module.exports = {
     postCreateNews,
     getAllNews,
+    getHotNews,
     getBreakingNews,
     getNewsByCategory,
     getNewsById,
