@@ -69,7 +69,7 @@ const getBreakingNews = async (req, res) => {
 const getNewsByCategory = async (req, res) => {
     const { categoryId } = req.params;
     try {
-        const news = await News.find({ categoryId: mongoose.Types.ObjectId(categoryId) }).populate('categoryId');
+        const news = await News.find({ categoryId: mongoose.Types.ObjectId(categoryId) }).sort({date: -1}).populate('categoryId');
         if (news.length > 0) {
             res.json({
                 status: 200,
