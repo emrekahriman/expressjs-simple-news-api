@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { postCreateNews, getAllNews, getBreakingNews, getNewsById } = require('../controllers/NewsController');
+const { postCreateNews, getAllNews, getBreakingNews, getNewsById, getNewsByCategory} = require('../controllers/NewsController');
 
 
 router.post('/create-news', postCreateNews);
